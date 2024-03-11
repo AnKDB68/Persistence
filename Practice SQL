@@ -23,5 +23,27 @@ Question 1:
 
 Question 2:
 
-
+    WITH a0 AS (SELECT r.name region_name, SUM(total_amt_usd) total_spend
+    FROM accounts a
+    JOIN orders o
+    ON a.id = o.account_id
+    JOIN sales_reps s
+    ON a.sales_rep_id = s.id
+    JOIN region r
+    ON s.region_id = r.id
+    GROUP BY 1),
+    
+    a1 AS (SELECT MAX(total_spend) max_spend
+    FROM a0)
+    
+    SELECT r.name, COUNT(o.total) total_sale
+    FROM accounts a
+    JOIN orders o
+    ON a.id = o.account_id
+    JOIN sales_reps s
+    ON a.sales_rep_id = s.id
+    JOIN region r
+    ON s.region_id = r.id
+    GROUP BY 1
+    HAVING SUM(o.total_amt_usd) = (SELECT max_spend FROM a1)
 
