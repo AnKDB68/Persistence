@@ -1,0 +1,27 @@
+Question 1:
+
+    WITH a_1 AS (SELECT s.name rep_name, r.name region_name, SUM(o.total_amt_usd) total_sale
+    FROM accounts a
+    JOIN orders o
+    ON a.id = o.account_id
+    JOIN sales_reps s
+    ON s.id = a.sales_rep_id
+    JOIN region r
+    ON r.id = s.region_id
+    GROUP BY 1, 2
+    ORDER BY 3 DESC),
+    
+    a_2 AS (SELECT region_name, MAX(total_sale) max_sale
+    FROM a_1
+    GROUP BY 1
+    ORDER BY 2 DESC)
+    
+    SELECT a_1.rep_name, a_2.region_name, a_2.max_sale
+    FROM a_1
+    JOIN a_2
+    ON a_1.region_name = a_2.region_name AND a_2.max_sale = a_1.total_sale
+
+Question 2:
+
+
+
